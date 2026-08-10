@@ -1,14 +1,14 @@
 import os
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage
 
 load_dotenv()
 
-llm = ChatOpenAI(
-    model="gpt-4o-mini",
+llm = ChatGoogleGenerativeAI(
+    model="gemini-3.1-flash-lite",
     temperature=0.7,
-    api_key=os.getenv("OPENAI_API_KEY")
+    google_api_key=os.getenv("GOOGLE_API_KEY")
 )
 
 def get_respose(user_input: str, chat_history: list):

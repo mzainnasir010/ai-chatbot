@@ -3,5 +3,5 @@ uvicorn
 streamlit
 langchain
 langchain-community
-openai
+langchain-google-genai
 python-dotenv
