@@ -1,10 +1,19 @@
 import time
+import base64
+from PIL import Image
 import streamlit as st
 from utils.api import stream_chat, check_health, fetch_models
 
+_logo = Image.open("assets/logo.png")
+
+# Pre-encode logo for inline HTML use
+with open("assets/logo.png", "rb") as _f:
+    _logo_b64 = base64.b64encode(_f.read()).decode()
+_logo_src = f"data:image/png;base64,{_logo_b64}"
+
 st.set_page_config(
     page_title="Echo | AI Chatbot",
-    page_icon="🔮",
+    page_icon=_logo,
     layout="wide",
     initial_sidebar_state="auto",
 )
@@ -249,8 +258,11 @@ def apply_theme(theme_name: str):
         /* ── Main header ── */
         .echo-header {{
             padding: 32px 0 20px;
-            text-align: center;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }}
         .echo-header-badge {{
             display: inline-flex;
@@ -278,15 +290,17 @@ def apply_theme(theme_name: str):
             line-height: 1.15;
             letter-spacing: -1px;
             margin: 0;
+            text-align: center;
         }}
+
         .echo-header-sub {{
             font-size: clamp(13px, 2vw, 15px);
             color: {t['text_muted']};
-            margin-top: 10px;
+            margin: 10px auto 0;
             font-weight: 400;
             max-width: 480px;
-            margin-left: auto;
-            margin-right: auto;
+            width: 100%;
+            text-align: center;
         }}
         .echo-divider {{
             height: 1px;
@@ -377,6 +391,36 @@ def apply_theme(theme_name: str):
             border-radius: 50%;
             background: {t['text_muted']};
             display: inline-block;
+        }}
+
+        /* ── Typing / loading indicator ── */
+        .typing-indicator {{
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 2px;
+        }}
+        .typing-indicator span {{
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: {t['accent']};
+            display: inline-block;
+            animation: typing-bounce 1.2s infinite ease-in-out;
+        }}
+        .typing-indicator span:nth-child(1) {{ animation-delay: 0s; }}
+        .typing-indicator span:nth-child(2) {{ animation-delay: 0.18s; }}
+        .typing-indicator span:nth-child(3) {{ animation-delay: 0.36s; }}
+        @keyframes typing-bounce {{
+            0%, 80%, 100% {{ transform: translateY(0); opacity: 0.4; }}
+            40%            {{ transform: translateY(-7px); opacity: 1; }}
+        }}
+        .typing-label {{
+            font-size: 12px;
+            color: {t['text_muted']};
+            margin-left: 6px;
+            font-style: italic;
+            letter-spacing: 0.2px;
         }}
 
         /* ── Chat input ── */
@@ -568,26 +612,34 @@ apply_theme(st.session_state.theme)
 
 # ─── Sidebar ──────────────────────────────────────────────────────────────────
 with st.sidebar:
-    # Brand header
-    st.markdown(
-        """
-        <div class="echo-brand">
-            <div class="echo-brand-icon">🔮</div>
-            <div>
-                <div class="echo-brand-text-name">Echo</div>
-                <div class="echo-brand-text-sub">AI Assistant</div>
+    # Brand header — logo image + text
+    col_logo, col_text = st.columns([1, 3])
+    with col_logo:
+        st.image("assets/logo.png", width=52)
+    with col_text:
+        st.markdown(
+            """
+            <div style="padding: 6px 0;">
+                <div style="font-size:20px;font-weight:700;color:#ffffff;
+                    font-family:'Space Grotesk',sans-serif;line-height:1.1;
+                    text-shadow:0 1px 4px rgba(0,0,0,0.3);">
+                    Echo
+                </div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.72);
+                    letter-spacing:0.5px;text-transform:uppercase;margin-top:2px;">
+                    AI Assistant
+                </div>
             </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+            """,
+            unsafe_allow_html=True,
+        )
 
     st.markdown("<br>", unsafe_allow_html=True)
 
     # Status
     status_ok = check_health()
     dot_color = "#10B981" if status_ok else "#EF4444"
-    status_text = "Backend Online" if status_ok else "Backend Offline"
+    status_text = "Echo Alive" if status_ok else "Echo Offline"
     st.markdown(
         f"""
         <div class="status-pill">
@@ -669,25 +721,30 @@ with st.sidebar:
     st.markdown("<br>", unsafe_allow_html=True)
 
 # ─── Main Area ────────────────────────────────────────────────────────────────
-# Header
+# Header — fully self-contained HTML block for perfect centering
 st.markdown(
-    """
+    f"""
     <div class="echo-header">
-        <div class="echo-header-badge">🔮 &nbsp;Powered by Gemini</div>
+        <img src="{_logo_src}" width="72"
+             style="display:block; margin:0 auto 14px;
+                    filter:drop-shadow(0 4px 18px rgba(0,0,0,0.15));">
         <h1 class="echo-header-title">Echo: Your own AI Assistant</h1>
-        <p class="echo-header-sub">Ask anything: responses stream in real-time as they're generated.</p>
+        <p class="echo-header-sub">Ask anything: responses stream in real-time as they\'re generated.</p>
     </div>
     <hr class="echo-divider">
     """,
     unsafe_allow_html=True,
 )
 
+
 # ── Chat history ──
 if not st.session_state.history:
     st.markdown(
-        """
+        f"""
         <div class="echo-empty">
-            <div class="echo-empty-icon">🔮</div>
+            <img src="{_logo_src}" width="88"
+                 style="margin-bottom:18px; display:block; margin-left:auto; margin-right:auto;
+                        filter:drop-shadow(0 4px 16px rgba(0,0,0,0.15));">
             <div class="echo-empty-title">Start a conversation</div>
             <div class="echo-empty-sub">Type a message below or try one of these to get started.</div>
             <div class="suggestion-grid">
@@ -704,7 +761,7 @@ if not st.session_state.history:
     )
 else:
     for msg in st.session_state.history:
-        avatar = "🧑" if msg["role"] == "user" else "🔮"
+        avatar = "🧑" if msg["role"] == "user" else _logo
         with st.chat_message(msg["role"], avatar=avatar):
             st.markdown(msg["content"])
             if msg["role"] == "assistant" and msg.get("time") is not None:
@@ -728,10 +785,21 @@ if user_input:
 
     history_pairs = [(m["role"], m["content"]) for m in st.session_state.history[:-1]]
 
-    with st.chat_message("assistant", avatar="🔮"):
+    with st.chat_message("assistant", avatar=_logo):
         placeholder = st.empty()
         stats_placeholder = st.empty()
         full_reply = ""
+
+        # ─ Show typing indicator immediately before first chunk ─
+        placeholder.markdown(
+            """
+            <div class="typing-indicator">
+                <span></span><span></span><span></span>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
         start = time.perf_counter()
         try:
             for chunk in stream_chat(user_input, history_pairs, st.session_state.model):
