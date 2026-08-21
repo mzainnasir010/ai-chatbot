@@ -1,4 +1,4 @@
-# 🔮 Echo — AI Chatbot
+# 🔮 Echo: AI Chatbot
 
 > A production-ready, full-stack AI chatbot powered by **Google Gemini**, built with **FastAPI**, **LangChain**, and **Streamlit**. Features real-time response streaming, a premium responsive UI, multi-model support, and dark/light themes.
 
@@ -28,10 +28,10 @@
 
 | Service | Role |
 |---|---|
-| **Server** (`/server`) | FastAPI backend — handles AI inference, model routing, and streaming |
-| **Client** (`/client`) | Streamlit frontend — renders the chat UI, themes, and streams responses |
+| **Server** (`/server`) | FastAPI backend: handles AI inference, model routing, and streaming |
+| **Client** (`/client`) | Streamlit frontend: renders the chat UI, themes, and streams responses |
 
-The client calls the server's REST API and streams the response token-by-token, giving users a real-time typing effect. The project is designed to be easily extensible — swap models, add new routes, or restyle the UI without touching the other half.
+The client calls the server's REST API and streams the response token-by-token, giving users a real-time typing effect. The project is designed to be easily extensible swap models, add new routes, or restyle the UI without touching the other half.
 
 ---
 
@@ -83,7 +83,7 @@ The client calls the server's REST API and streams the response token-by-token, 
 ### AI / Models
 | Model | Description |
 |---|---|
-| `gemini-3.5-flash` | Default — balanced speed & quality ✅ |
+| `gemini-3.5-flash` | Default: balanced speed & quality ✅ |
 | `gemini-3.5-flash-lite` | Fastest, lightest responses |
 | `gemini-3.6-flash` | Next-gen flash model |
 | `gemini-3.7-flash` | Latest flash model |
@@ -133,9 +133,9 @@ AI Chatbot/
 
 Make sure you have the following installed before starting:
 
-- **Python 3.10+** — [Download](https://www.python.org/downloads/)
-- **pip** — comes with Python
-- **Google Gemini API Key** — get one free at [Google AI Studio](https://aistudio.google.com/app/apikey)
+- **Python 3.10+** : [Download](https://www.python.org/downloads/)
+- **pip** : comes with Python
+- **Google Gemini API Key** : get one free at [Google AI Studio](https://aistudio.google.com/app/apikey)
 
 ---
 
@@ -173,7 +173,7 @@ deactivate
 
 Both the server and client need their own `.env` file. Copy the provided `.env.example` in each folder and fill in your values.
 
-### Server — `server/.env`
+### Server : `server/.env`
 
 ```powershell
 # Copy the template
@@ -196,7 +196,7 @@ GOOGLE_API_KEY=your_google_gemini_api_key_here
 
 ---
 
-### Client — `client/.env`
+### Client : `client/.env`
 
 ```powershell
 # Copy the template
@@ -240,9 +240,9 @@ pip install -r server\requirements.txt -r client\requirements.txt
 
 ## 🚀 Running the App
 
-You need **two separate terminals** — one for the server and one for the client.
+You need **two separate terminals** : one for the server and one for the client.
 
-### Terminal 1 — Start the Backend (FastAPI)
+### Terminal 1 : Start the Backend (FastAPI)
 
 ```powershell
 # Activate venv
@@ -259,7 +259,7 @@ The API will be live at:
 
 ---
 
-### Terminal 2 — Start the Frontend (Streamlit)
+### Terminal 2 : Start the Frontend (Streamlit)
 
 ```powershell
 # Activate venv
@@ -317,15 +317,15 @@ Streaming chat response (used by the UI). Returns plain text chunks as they are 
 
 ## ✨ Features
 
-- 🔮 **Real-time streaming** — responses appear token-by-token as Gemini generates them
-- 🎨 **Dark & Light themes** — switchable from the sidebar, applied instantly
-- 🤖 **Multi-model support** — switch between Gemini models mid-conversation
-- 📊 **Response stats** — each reply shows generation time (seconds) and word count
-- ⚡ **Typing indicator** — animated bouncing dots while the model is thinking
-- 📱 **Responsive design** — works on desktop, tablet, and mobile
-- 🖼️ **Custom branding** — logo used as favicon, sidebar icon, header, and chat avatar
-- 🩺 **Health check** — live backend status displayed in the sidebar
-- 🗑️ **Clear chat** — reset conversation with one click
+- 🔮 **Real-time streaming** : responses appear token-by-token as Gemini generates them
+- 🎨 **Dark & Light themes** : switchable from the sidebar, applied instantly
+- 🤖 **Multi-model support** : switch between Gemini models mid-conversation
+- 📊 **Response stats** : each reply shows generation time (seconds) and word count
+- ⚡ **Typing indicator** : animated bouncing dots while the model is thinking
+- 📱 **Responsive design** : works on desktop, tablet, and mobile
+- 🖼️ **Custom branding** : logo used as favicon, sidebar icon, header, and chat avatar
+- 🩺 **Health check** : live backend status displayed in the sidebar
+- 🗑️ **Clear chat** : reset conversation with one click
 
 ---
 
@@ -350,11 +350,11 @@ In `client/app.py`, edit the `THEMES` dictionary at the top of the file.
 
 ## 🗒 Notes & Gotchas
 
-- **Never commit `.env` files** — they are git-ignored by default. Always use `.env.example` as reference.
-- **Virtual environment** (`chatbot_venv/`) is also git-ignored — each developer creates their own.
+- **Never commit `.env` files** : they are git-ignored by default. Always use `.env.example` as reference.
+- **Virtual environment** (`chatbot_venv/`) is also git-ignored : each developer creates their own.
 - The server must be started **before** the client, otherwise the health check will fail on load.
 - If you change the server port from `8000`, update `BACKEND_URL` in `client/.env` accordingly.
-- The Streamlit client connects to the backend via `BACKEND_URL` — this makes it trivially deployable to cloud platforms (Render, Railway, Fly.io, etc.) by just updating that one variable.
+- The Streamlit client connects to the backend via `BACKEND_URL` : this makes it trivially deployable to cloud platforms (Render, Railway, Fly.io, etc.) by just updating that one variable.
 - `ALLOWED_ORIGINS` in the server `.env` must include your client's URL when deploying to production to avoid CORS errors.
 
 ---
