@@ -2,6 +2,9 @@
 
 > A production-ready, full-stack AI chatbot powered by **Google Gemini**, built with **FastAPI**, **LangChain**, and **Streamlit**. Features real-time response streaming, a premium responsive UI, multi-model support, and dark/light themes.
 
+### 🚀 Live Demo
+
+[**Try Echo Live**](https://echo-ai-chatbot.streamlit.app/)
 ---
 
 ## 📋 Table of Contents
