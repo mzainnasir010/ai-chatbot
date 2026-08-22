@@ -1,14 +1,20 @@
 import time
 import base64
+from pathlib import Path
 from PIL import Image
 import streamlit as st
 from utils.api import stream_chat, check_health, fetch_models
 
-_logo = Image.open("assets/logo.png")
+# Asset Paths
+BASE_DIR = Path(__file__).resolve().parent
+LOGO_PATH = BASE_DIR / "assets" / "logo.png"
+
+_logo = Image.open(LOGO_PATH)
 
 # Pre-encode logo for inline HTML use
-with open("assets/logo.png", "rb") as _f:
+with open(LOGO_PATH, "rb") as _f:
     _logo_b64 = base64.b64encode(_f.read()).decode()
+
 _logo_src = f"data:image/png;base64,{_logo_b64}"
 
 st.set_page_config(
@@ -18,7 +24,7 @@ st.set_page_config(
     initial_sidebar_state="auto",
 )
 
-# ─── Theme Definitions ────────────────────────────────────────────────────────
+# Theme Definitions
 THEMES = {
     "Dark": {
         "bg":           "#0A0D14",
@@ -54,7 +60,7 @@ THEMES = {
     },
 }
 
-# ─── Session State Init ───────────────────────────────────────────────────────
+# Session State Init
 if "history" not in st.session_state:
     st.session_state.history = []
 if "theme" not in st.session_state:
@@ -68,7 +74,7 @@ if "prev_theme" not in st.session_state:
     st.session_state.prev_theme = st.session_state.theme
 
 
-# ─── CSS Injection ────────────────────────────────────────────────────────────
+# CSS Injection
 def apply_theme(theme_name: str):
     t = THEMES[theme_name]
     st.markdown(
@@ -610,12 +616,12 @@ def apply_theme(theme_name: str):
 
 apply_theme(st.session_state.theme)
 
-# ─── Sidebar ──────────────────────────────────────────────────────────────────
+# Sidebar 
 with st.sidebar:
     # Brand header — logo image + text
     col_logo, col_text = st.columns([1, 3])
     with col_logo:
-        st.image("assets/logo.png", width=52)
+        st.image(str(LOGO_PATH), width=52)
     with col_text:
         st.markdown(
             """
@@ -720,7 +726,7 @@ with st.sidebar:
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-# ─── Main Area ────────────────────────────────────────────────────────────────
+# Main Area 
 # Header — fully self-contained HTML block for perfect centering
 st.markdown(
     f"""
@@ -737,7 +743,7 @@ st.markdown(
 )
 
 
-# ── Chat history ──
+# Chat history
 if not st.session_state.history:
     st.markdown(
         f"""
@@ -774,7 +780,7 @@ else:
                     unsafe_allow_html=True,
                 )
 
-# ── Input ──
+# Input
 user_input = st.chat_input("Message Echo...")
 
 if user_input:
@@ -790,7 +796,7 @@ if user_input:
         stats_placeholder = st.empty()
         full_reply = ""
 
-        # ─ Show typing indicator immediately before first chunk ─
+        # Show typing indicator immediately before first chunk
         placeholder.markdown(
             """
             <div class="typing-indicator">
